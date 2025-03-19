@@ -1,13 +1,5 @@
+import { IBookData } from '@/types';
 import Link from 'next/link';
-
-type Props = {
-    id: number;
-    title: string;
-    subTitle: string;
-    author: string;
-    publisher: string;
-    coverImgUrl: string;
-};
 
 export default function BookItem({
     id,
@@ -16,7 +8,7 @@ export default function BookItem({
     author,
     publisher,
     coverImgUrl,
-}: Props) {
+}: IBookData) {
     return (
         <Link
             className="flex gap-4 px-4 py-8 border-b border-gray-300"
