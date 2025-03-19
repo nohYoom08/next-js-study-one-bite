@@ -17,7 +17,11 @@ export const getStaticProps = async () => {
         fetchBooks(),
         fetchRandomBooks(),
     ]);
-    return { props: { allBooks, recoBooks } };
+    return {
+        props: { allBooks, recoBooks },
+        // revalidate: 3,
+        // ISR방식으로 변경 (3초마다 페이지 재생성) => 3초마다 새로고침을 하면 새로운 데이터를 가져옴
+    };
 };
 
 export default function Home({

@@ -1,5 +1,6 @@
 import { GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import fetchOneBook from '../../lib/fetch-one-book';
+import { useRouter } from 'next/router';
 
 export const getStaticPaths = async () => {
     return {
@@ -9,8 +10,10 @@ export const getStaticPaths = async () => {
             { params: { id: '3' } },
         ],
         //아래의 getStaticProps()의 주석처럼 id목록을 미리 정의해놓은 것 (id가 1, 2, 3인 경우의 페이지들이 미리 렌더링 될 예정)
-        fallback: false,
+        fallback: true,
         //fallback이 false인 경우, paths에 정의된 id가 아닌 경우 404에러가 발생함
+        //blocking인 경우, 서버에서 데이터를 미리 가져와서 렌더링을 하기 때문에 느릴 수 있지만, 미리 정의된 id가 아닌 경우에도 렌더링이 가능함
+        //true인 경우, 미리 정의된 id가 아닐 경우에는 일단 props(getStaticProps()'s)가 없는 페이지를 브라우저에 반환, 그 후에 서버에서 데이터를 가져와서 렌더링함
     };
 };
 
@@ -24,13 +27,20 @@ export const getStaticProps = async (
     //다만 어떤 param(id)를 사용할지는 미리 정의해야 함 (백엔드에서 미리 id목록만 받아온다던지, 미리 정의된 예시id목록을 사용한다던지)
     const book = await fetchOneBook(Number(id));
 
+    if (!book) return { notFound: true };
+    // NotFound 페이지로 리다이렉트
+
     return { props: { book } };
 };
 
 export default function Page({
     book,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+    const router = useRouter();
+    if (router.isFallback) return '로딩중입니다.';
+    //fallback이 true인 경우, 미리 정의된 id가 아닌 경우에는 일단 props(getStaticProps()'s)가 없는 페이지를 브라우저에 반환, 위 코드가 실행됨.
     if (!book) return '문제가 발생했습니다. 다시 시도하세요.';
+    //fallback이 끝난 이후에도 데이터가 없음 -> 진짜 문제 발생
     const { id, title, subTitle, description, author, publisher, coverImgUrl } =
         book;
 
