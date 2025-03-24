@@ -4,6 +4,7 @@ import BookItem from '@/components/book-item';
 import { InferGetServerSidePropsType } from 'next';
 import fetchBooks from '../lib/fetch-books';
 import fetchRandomBooks from '../lib/fetch-random-books';
+import Head from 'next/head';
 
 // ✅ 재사용 가능한 제목 컴포넌트 -> 한 컴포넌트 내에서 Tailwind CSS가 중복된다면 이런 방식도 고려
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
@@ -29,20 +30,35 @@ export default function Home({
     recoBooks,
 }: InferGetServerSidePropsType<typeof getStaticProps>) {
     return (
-        <div className="flex-col">
-            <section>
-                <SectionTitle>지금 추천하는 도서</SectionTitle>
-                {recoBooks.map(item => (
-                    <BookItem key={item.id} {...item} />
-                ))}
-            </section>
-            <section>
-                <SectionTitle>등록된 모든 도서</SectionTitle>
-                {allBooks.map(item => (
-                    <BookItem key={item.id} {...item} />
-                ))}
-            </section>
-        </div>
+        <>
+            {/* react-helmet 기능 */}
+            <Head>
+                <title>한입북스</title>
+                <meta property="og:image" content="/thumnail.png" />
+                {/* 이 HTML이 들어간 페이지를 카카오톡, 페이스북, 슬랙 등에 공유하면
+                그 페이지 링크 미리보기 썸네일로 /thumnail.png 이미지가 사용
+                (물론 이 경로가 절대경로나 올바른 URL이어야 실제로 보임) */}
+                <meta property="op:title" content="한입북스" />
+                <meta
+                    property="op:description"
+                    content="한입 북스에 등록된 도서들을 만나보세요"
+                />
+            </Head>
+            <div className="flex-col">
+                <section>
+                    <SectionTitle>지금 추천하는 도서</SectionTitle>
+                    {recoBooks.map(item => (
+                        <BookItem key={item.id} {...item} />
+                    ))}
+                </section>
+                <section>
+                    <SectionTitle>등록된 모든 도서</SectionTitle>
+                    {allBooks.map(item => (
+                        <BookItem key={item.id} {...item} />
+                    ))}
+                </section>
+            </div>
+        </>
     );
 }
 

@@ -3,7 +3,7 @@ import { IBookData } from '@/types';
 export default async function fetchOneBook(
     id: number,
 ): Promise<IBookData | null> {
-    const url = `http://localhost:12345/book/${id}`;
+    const url = `${process.env.NEXT_PUBLIC_BACK_API}/book/${id}`;
     try {
         const response = await fetch(url);
         if (!response.ok) {

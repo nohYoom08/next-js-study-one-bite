@@ -1,6 +1,7 @@
 import { GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import fetchOneBook from '../../lib/fetch-one-book';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 export const getStaticPaths = async () => {
     return {
@@ -37,34 +38,64 @@ export default function Page({
     book,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
     const router = useRouter();
-    if (router.isFallback) return '로딩중입니다.';
+    if (router.isFallback)
+        return (
+            <>
+                <Head>
+                    <title>한입북스</title>
+                    <meta property="og:image" content="/thumnail.png" />
+                    {/* 이 HTML이 들어간 페이지를 카카오톡, 페이스북, 슬랙 등에 공유하면
+                그 페이지 링크 미리보기 썸네일로 /thumnail.png 이미지가 사용
+                (물론 이 경로가 절대경로나 올바른 URL이어야 실제로 보임) */}
+                    <meta property="op:title" content="한입북스" />
+                    <meta
+                        property="op:description"
+                        content="한입 북스에 등록된 도서들을 만나보세요"
+                    />
+                </Head>
+                <div>로딩중입니다.</div>
+            </>
+        );
     //fallback이 true인 경우, 미리 정의된 id가 아닌 경우에는 일단 props(getStaticProps()'s)가 없는 페이지를 브라우저에 반환, 위 코드가 실행됨.
+    //fallback 상태에서도 SEO를 적용시키기 위해 위와 같은 조건문에 Head태그 사용
+
     if (!book) return '문제가 발생했습니다. 다시 시도하세요.';
     //fallback이 끝난 이후에도 데이터가 없음 -> 진짜 문제 발생
     const { id, title, subTitle, description, author, publisher, coverImgUrl } =
         book;
 
     return (
-        <div key={id}>
-            <div
-                className={`relative flex justify-center p-5 bg-center bg-no-repeat bg-cover 
+        <>
+            <Head>
+                <title>{title}</title>
+                <meta property="og:image" content={coverImgUrl} />
+                <meta property="op:title" content={title} />
+                <meta property="op:description" content={description} />
+            </Head>
+            <div key={id}>
+                <div
+                    className={`relative flex justify-center p-5 bg-center bg-no-repeat bg-cover 
             before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-black before:opacity-50 before:content-''`}
-                style={{ backgroundImage: `url(${coverImgUrl})` }}
-                // tailwindCSS에서 변수를 직접 사용할 때는 style태그를 직접 사용
-            >
-                <img className="z-1 h-full max-w-90 " src={coverImgUrl}></img>
-            </div>
-            <div className="flex flex-col gap-1">
-                <div className="text-lg font-bold">{title}</div>
-                <div className="text-gray-500">{subTitle}</div>
-                <div className="text-gray-500">
-                    {author} | {publisher}
+                    style={{ backgroundImage: `url(${coverImgUrl})` }}
+                    // tailwindCSS에서 변수를 직접 사용할 때는 style태그를 직접 사용
+                >
+                    <img
+                        className="z-1 h-full max-w-90 "
+                        src={coverImgUrl}
+                    ></img>
                 </div>
-                <div className="bg-gray-100 p-4 leading-6 rounded-md whitespace-pre-line">
-                    {description}
+                <div className="flex flex-col gap-1">
+                    <div className="text-lg font-bold">{title}</div>
+                    <div className="text-gray-500">{subTitle}</div>
+                    <div className="text-gray-500">
+                        {author} | {publisher}
+                    </div>
+                    <div className="bg-gray-100 p-4 leading-6 rounded-md whitespace-pre-line">
+                        {description}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

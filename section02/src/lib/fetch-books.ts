@@ -1,7 +1,7 @@
 import { IBookData } from '@/types';
 
 export default async function fetchBooks(q?: string): Promise<IBookData[]> {
-    let url = 'http://localhost:12345/book';
+    let url = `${process.env.NEXT_PUBLIC_BACK_API}/book`;
 
     if (q) {
         url += `/search?q=${q}`;
