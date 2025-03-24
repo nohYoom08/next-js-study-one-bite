@@ -2,7 +2,7 @@
 export default async function Page({
     searchParams,
 }: {
-    searchParmas: Promise<{ q: string }>;
+    searchParams: Promise<{ q: string }>;
 }) {
     // 쿼리스트링이나 URL 파라미터 등등을 props로 받아올 수 있음
     const { q } = await searchParams;
