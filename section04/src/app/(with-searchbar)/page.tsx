@@ -1,12 +1,15 @@
 //단순 '/'경로일 때 children에 렌더링되는 page.tsx
 // (/(with-searchbar)/page.tsx에서 (with-searchbar) 부분은 라우팅에 포함되지 않기 때문에 '/'로 접근했을 때 children에 렌더링되는 page.tsx가 된다.)
 import BookItem from '@/components/book-item';
-import books from '@/mock/books.json';
 import { BookData } from '@/types';
 
 async function AllBooks() {
     const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
+        { cache: 'force-cache' },
+        //cache: 'force-cache'는 클라이언트 측에서 캐시를 사용하라는 의미
+        //cache:'no-store'는 매번 서버에서 새로 요청하라는 의미
+        //next:{revalidate:3}은 3초 이후에 현재 캐시를 stale상태로 바꿈 => 나중에 요청 들어왔을 때 일단 stale상태의 캐시를 줌 => stale상태의 캐시는 새로 요청되어서 이후에 새로 refresh됨(마치 page router의 ISR과 비슷)
     );
     if (!response.ok) return <div>에러가 발생했습니다.</div>;
     const allBooks: BookData[] = await response.json();
@@ -23,6 +26,7 @@ async function AllBooks() {
 async function RecoBooks() {
     const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`,
+        { cache: 'force-cache' },
     );
     if (!response.ok) return <div>에러가 발생했습니다.</div>;
     const recoBooks: BookData[] = await response.json();
