@@ -4,6 +4,7 @@ import style from './page.module.css';
 //아래의 미리 설정해둔 params가 아니면 무조건 404에러가 발생 (설령 db에 있다 하더라도)
 // export const dynamicParams = false;
 
+//라우트 세그먼트 옵션
 //페이지 라우팅의 getStaticPaths()과 동일한 기능, 미리 정의된 id값을 기반으로 정적 페이지를 생성하는 함수
 export function generateStaticParams() {
     return [

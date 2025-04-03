@@ -3,6 +3,14 @@
 import BookItem from '@/components/book-item';
 import { BookData } from '@/types';
 
+export const dynamic = 'force-dynamic';
+//특정 페이지의 유형을 강제로 Static, Dynamic 페이지로 설정할 수 있음
+//1. auto: 아무것도 강제하지 않는 기본값 옵션 (원칙에 따라서 동적/정적 자동으로 결정)
+//2. force-dynamic: 동적 페이지로 강제 설정
+//3. force-static: 정적 페이지로 강제 설정
+// (searchParams등은 undefined화(검색 페이지 기능이 제대로 동작하지 않을 수 없음), no-store의 캐시 옵션은 강제로 force-cache로 설정)
+//4. error: force-static과 동일하게 정적 페이지로 강제 설정하지만, 이로 인한 문제 발생시 빌드 오류를 발생시킴
+
 async function AllBooks() {
     const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
