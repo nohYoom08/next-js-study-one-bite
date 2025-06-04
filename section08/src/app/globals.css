@@ -11,3 +11,7 @@ a {
     text-decoration: none;
     cursor: pointer;
 }
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+}

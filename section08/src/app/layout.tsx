@@ -29,8 +29,10 @@ async function Footer() {
 
 export default function RootLayout({
     children,
+    modal,
 }: Readonly<{
     children: React.ReactNode;
+    modal: React.ReactNode; // 모달 컴포넌트가 렌더링될 위치
 }>) {
     return (
         <html lang="en">
@@ -40,8 +42,12 @@ export default function RootLayout({
                         <Link href={'/'}>📚 ONEBITE BOOKS</Link>
                     </header>
                     <main className="pt-2">{children}</main>
+                    {/* 패러렐이 아닌('@'가 없는) 단순 경로에 의한 page.tsx 렌더링 */}
                     <Footer />
                 </div>
+                {modal}
+                <div id="modal-root"></div>
+                {/* 모달을 렌더링할 대상 DOM 요소(components/modal.tsx 참조 ) */}
             </body>
         </html>
     );
