@@ -1,6 +1,6 @@
 import BookItem from '@/components/book-item';
 import { BookData } from '@/types';
-import delay from '@/util/delay';
+// import delay from '@/util/delay';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -28,7 +28,7 @@ export async function generateMetadata({
 }
 
 async function SearchResult({ q }: { q: string }) {
-    await delay(1500);
+    // await delay(1500);
     //단순 딜레이 함수 (검색어 입력 후 1.5초 대기 (대체 UI 확인용))
 
     const response = await fetch(

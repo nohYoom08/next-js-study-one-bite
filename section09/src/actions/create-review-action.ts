@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 
 //다른 컴포넌트로부터 분리한 함수라면, 함수 내부에 있던 'use server'를 최상단에 배치하는게 일반적
 

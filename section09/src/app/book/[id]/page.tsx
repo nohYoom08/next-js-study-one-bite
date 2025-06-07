@@ -39,21 +39,37 @@ export async function generateMetadata({
     };
 }
 
-//라우트 세그먼트 옵션
-//페이지 라우팅의 getStaticPaths()과 동일한 기능, 미리 정의된 id값을 기반으로 정적 페이지를 생성하는 함수
-export function generateStaticParams() {
-    return [
-        {
-            id: '1',
-            //다만 속성값은 항상 문자열로 작성
-        },
-        {
-            id: '2',
-        },
-        {
-            id: '3',
-        },
-    ];
+// //라우트 세그먼트 옵션
+// //페이지 라우팅의 getStaticPaths()과 동일한 기능, 미리 정의된 id값을 기반으로 정적 페이지를 생성하는 함수
+// export function generateStaticParams() {
+//     return [
+//         {
+//             id: '1',
+//             //다만 속성값은 항상 문자열로 작성
+//         },
+//         {
+//             id: '2',
+//         },
+//         {
+//             id: '3',
+//         },
+//     ];
+// // "generateStaticParams()" => 말 그대로 해당 페이지 컴포넌트의 props인 params객체로 return값들이 들어가게 된다는 것.
+// // 이 함수는 빌드 시점에 실행되어서, 미리 정의된 id값을 기반으로 배열 요소 하나하나의 params.id로서 정적 페이지를 생성함
+// }
+
+export async function generateStaticParams() {
+    const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
+    );
+    if (!response.ok) throw new Error(response.statusText);
+    const books: BookData[] = await response.json();
+
+    return books?.map((book: BookData) => ({
+        id: book.id.toString(),
+    }));
+    //books의 id값을 기반으로 정적 페이지를 생성하는 함수
+    //이렇게 하면 빌드 시점에 books의 id값을 기반으로 모든 id에 대한 정적 페이지를 생성함
 }
 
 async function BookDetail({ bookId }: { bookId: string }) {

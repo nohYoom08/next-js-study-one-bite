@@ -2,11 +2,10 @@
 // (/(with-searchbar)/page.tsx에서 (with-searchbar) 부분은 라우팅에 포함되지 않기 때문에 '/'로 접근했을 때 children에 렌더링되는 page.tsx가 된다.)
 import BookItem from '@/components/book-item';
 import { BookData } from '@/types';
-import delay from '@/util/delay';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 //특정 페이지의 유형을 강제로 Static, Dynamic 페이지로 설정할 수 있음
 //1. auto: 아무것도 강제하지 않는 기본값 옵션 (원칙에 따라서 동적/정적 자동으로 결정)
 //2. force-dynamic: 동적 페이지로 강제 설정 (스트리밍 기능 테스트를 해볼 때 유용)
@@ -28,8 +27,8 @@ export const metadata: Metadata = {
 //openGraph.title, openGraph.description : 📢 소셜미디어 공유용 → 카카오톡, 슬랙, 페이스북 링크 미리보기
 
 async function AllBooks() {
-    await delay(1500);
-    //스트리밍 기능을 확인하기 위한 딜레이 테스트
+    // await delay(1500);
+    // //스트리밍 기능을 확인하기 위한 딜레이 테스트
     const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
         { cache: 'force-cache' },
@@ -50,8 +49,8 @@ async function AllBooks() {
 }
 
 async function RecoBooks() {
-    await delay(3000);
-    //스트리밍 기능을 확인하기 위한 딜레이 테스트
+    // await delay(3000);
+    // //스트리밍 기능을 확인하기 위한 딜레이 테스트
     const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`,
         { next: { revalidate: 3 } },
@@ -77,15 +76,16 @@ export default async function Home() {
         <div className="flex flex-col gap-5">
             <section>
                 <Heading3>지금 추천하는 도서</Heading3>
-                <Suspense fallback={<div>로딩 중입니다...</div>}>
-                    <RecoBooks />
-                </Suspense>
+                {/* <Suspense fallback={<div>로딩 중입니다...</div>}> */}
+                {/* 정적페이지로 최적화 중이기 때문에 Suspense태그는 필요 없어짐 */}
+                <RecoBooks />
+                {/* </Suspense> */}
             </section>
             <section>
                 <Heading3>등록된 모든 도서</Heading3>
-                <Suspense fallback={<div>로딩 중입니다...</div>}>
-                    <AllBooks />
-                </Suspense>
+                {/* <Suspense fallback={<div>로딩 중입니다...</div>}> */}
+                <AllBooks />
+                {/* </Suspense> */}
             </section>
         </div>
     );
